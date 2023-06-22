@@ -1,96 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>梦子Rainmaker☆BET</title>
+    <title>简单网页</title>
     <style>
         body {
+            margin: 0;
+            padding: 0;
             background-image: url('https://c-ssl.duitang.com/uploads/blog/202107/30/20210730033018_ba665.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center center;
         }
+        
+        #musicPlayer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+        }
     </style>
 </head>
 <body>
-    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1341338760&auto=1&height=66"></iframe>
-
-    <form id="messageForm">
-        <input type="text" id="nameInput" placeholder="请输入您的姓名" required>
-        <textarea id="messageInput" placeholder="请输入留言内容" required></textarea>
-        <button type="submit">提交留言</button>
-    </form>
-
-    <div id="messages">
-        <!-- 这里展示留言 -->
+    <!-- 其他内容 -->
+    
+    <div id="musicPlayer">
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1341338760&auto=0&height=66"></iframe>
     </div>
-
-    <script>
-        const messageForm = document.getElementById('messageForm');
-        const nameInput = document.getElementById('nameInput');
-        const messageInput = document.getElementById('messageInput');
-        const messagesContainer = document.getElementById('messages');
-
-        messageForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const name = nameInput.value;
-            const message = messageInput.value;
-            
-            // 创建一个新的留言对象
-            const newMessage = {
-                name,
-                message,
-                timestamp: new Date().toISOString()
-            };
-            
-            // 发送POST请求将留言数据提交到服务器
-            fetch('/handle-message', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newMessage)
-            })
-            .then(response => response.text())
-            .then(data => {
-                console.log(data);
-                // 清空输入框
-                nameInput.value = '';
-                messageInput.value = '';
-                // 刷新展示留言
-                fetchMessages();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        });
-
-        function fetchMessages() {
-            fetch('/messages.json')
-                .then(response => response.json())
-                .then(data => {
-                    messagesContainer.innerHTML = '';
-
-                    data.forEach(message => {
-                        const { name, message, timestamp } = message;
-                        const messageElement = document.createElement('div');
-                        messageElement.innerHTML = `
-                            <p><strong>${name}</strong></p>
-                            <p>${message}</p>
-                            <p>${timestamp}</p>
-                            <hr>
-                        `;
-                        messagesContainer.appendChild(messageElement);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-
-        // 初始加载留言
-        fetchMessages();
-    </script>
 </body>
 </html>
-
